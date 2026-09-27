@@ -5,7 +5,17 @@ import google.generativeai as genai
 from google.generativeai import types
 
 #configure api
-from api_key import api_key
+try:
+    # This will work when deployed to Streamlit Cloud
+    api_key = st.secrets["GOOGLE_API_KEY"]
+except Exception:
+    # This will work on your local machine
+    try:
+        from api_key import api_key
+    except ImportError:
+        st.error("API key not found! Please set GOOGLE_API_KEY in your Streamlit secrets or create api_key.py locally.")
+        st.stop()
+
 #configure genai
 genai.configure(api_key=api_key)
 #set up our model
